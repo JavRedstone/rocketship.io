@@ -1,0 +1,223 @@
+[gd_scene load_steps=28 format=3 uid="uid://c83657h0wv55m"]
+
+[ext_resource type="PackedScene" uid="uid://bsdt6jcwa4er8" path="res://assets/objects/asteroid/asteroid.glb" id="1_hgn7m"]
+[ext_resource type="Script" path="res://assets/scripts/spawners.gd" id="1_iuhk1"]
+[ext_resource type="Script" path="res://assets/scripts/visibility.gd" id="1_oae60"]
+[ext_resource type="Script" path="res://assets/scripts/asteroid_spawner.gd" id="2_5mppu"]
+[ext_resource type="PackedScene" uid="uid://qw1xi73kguhf" path="res://assets/objects/earth/earth.gltf" id="2_sl1wl"]
+[ext_resource type="Script" path="res://assets/scripts/star_spawner.gd" id="3_suont"]
+[ext_resource type="PackedScene" uid="uid://bpm0c5lel0dbx" path="res://assets/objects/planet/planet.gltf" id="4_bbr4e"]
+[ext_resource type="Script" path="res://assets/scripts/planet_spawner.gd" id="4_ufhr4"]
+[ext_resource type="PackedScene" uid="uid://biggi36tf05px" path="res://assets/objects/rocket/rocket.gltf" id="5_k15vh"]
+[ext_resource type="Script" path="res://assets/scripts/rocket_new.gd" id="6_0sg0a"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qgtm5"]
+radius = 12.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_nu44p"]
+radius = 50.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0p7ac"]
+margin = 0.0
+radius = 50.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vvq2v"]
+radius = 500.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jhjoo"]
+radius = 150.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2wpa5"]
+radius = 800.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k4t13"]
+emission_enabled = true
+emission = Color(1, 1, 0.388235, 1)
+emission_energy_multiplier = 5.0
+subsurf_scatter_strength = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_d7b2u"]
+material = SubResource("StandardMaterial3D_k4t13")
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gbies"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fq6vs"]
+margin = 0.062
+height = 5.71
+radius = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iol73"]
+albedo_color = Color(0.294118, 0.294118, 0.294118, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_jgh2q"]
+material = SubResource("StandardMaterial3D_iol73")
+radius = 0.125
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86nh8"]
+emission_enabled = true
+emission = Color(1, 0.521569, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_otd50"]
+material = SubResource("StandardMaterial3D_86nh8")
+radius = 0.125
+height = 0.25
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xwxsa"]
+
+[sub_resource type="Sky" id="Sky_arvxk"]
+sky_material = SubResource("ShaderMaterial_xwxsa")
+
+[sub_resource type="Environment" id="Environment_en0hg"]
+background_mode = 2
+sky = SubResource("Sky_arvxk")
+ambient_light_color = Color(0, 0, 0.772549, 1)
+
+[node name="Game" type="Node"]
+
+[node name="Spawners" type="Node3D" parent="."]
+script = ExtResource("1_iuhk1")
+GAME_BORDER = 5000
+CHUNK_SIZE = 500
+
+[node name="AsteroidSpawner" type="Node3D" parent="Spawners"]
+script = ExtResource("2_5mppu")
+
+[node name="StarSpawner" type="Node3D" parent="Spawners"]
+script = ExtResource("3_suont")
+
+[node name="PlanetSpawner" type="Node3D" parent="Spawners"]
+script = ExtResource("4_ufhr4")
+
+[node name="Asteroid" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+script = ExtResource("1_oae60")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Asteroid"]
+shape = SubResource("SphereShape3D_qgtm5")
+
+[node name="asteroid" parent="Asteroid" instance=ExtResource("1_hgn7m")]
+transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="Asteroid"]
+gravity_space_override = 3
+gravity_point = true
+gravity = 2.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Asteroid/Area3D"]
+shape = SubResource("SphereShape3D_nu44p")
+
+[node name="Earth" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Earth"]
+shape = SubResource("SphereShape3D_0p7ac")
+
+[node name="earth" parent="Earth" instance=ExtResource("2_sl1wl")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="Earth"]
+gravity_space_override = 3
+gravity_point = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Earth/Area3D"]
+shape = SubResource("SphereShape3D_vvq2v")
+
+[node name="Star" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 500, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Star"]
+shape = SubResource("SphereShape3D_jhjoo")
+
+[node name="Area3D" type="Area3D" parent="Star"]
+gravity_space_override = 3
+gravity_point = true
+gravity = 30.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Star/Area3D"]
+shape = SubResource("SphereShape3D_2wpa5")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Star"]
+light_energy = 500.0
+omni_range = 4096.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Star"]
+transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0, 0, 0)
+mesh = SubResource("SphereMesh_d7b2u")
+skeleton = NodePath("")
+
+[node name="Planet" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+script = ExtResource("1_oae60")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Planet"]
+shape = SubResource("SphereShape3D_0p7ac")
+
+[node name="planet" parent="Planet" instance=ExtResource("4_bbr4e")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="Planet"]
+gravity_space_override = 3
+gravity_point = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Planet/Area3D"]
+shape = SubResource("SphereShape3D_vvq2v")
+
+[node name="Rocket" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.428, 0)
+mass = 20.0
+inertia = Vector3(20, 5, 20)
+physics_material_override = SubResource("PhysicsMaterial_gbies")
+can_sleep = false
+script = ExtResource("6_0sg0a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rocket"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("CylinderShape3D_fq6vs")
+
+[node name="rotation_helper" type="Node3D" parent="Rocket"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="rocket" parent="Rocket/rotation_helper" instance=ExtResource("5_k15vh")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -2.855, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Rocket/rotation_helper"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 100, 0, 0)
+fov = 60.0
+near = 0.001
+far = 5000.0
+
+[node name="gray" type="CPUParticles3D" parent="Rocket/rotation_helper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.4, 0)
+emitting = false
+amount = 50
+lifetime = 3.0
+speed_scale = 0.2
+randomness = 1.0
+lifetime_randomness = 0.5
+mesh = SubResource("SphereMesh_jgh2q")
+direction = Vector3(0, 1, 0)
+spread = 80.0
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+
+[node name="yellow" type="CPUParticles3D" parent="Rocket/rotation_helper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.4, 0)
+emitting = false
+amount = 500
+lifetime = 3.0
+speed_scale = 0.2
+randomness = 0.5
+lifetime_randomness = 0.5
+mesh = SubResource("SphereMesh_otd50")
+direction = Vector3(0, -1, 0)
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_en0hg")
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 500, 200, 600)
+far = 10000.0
